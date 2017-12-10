@@ -6,7 +6,7 @@ public class Main {
     private static Lighting lighting;
 
     //color object because of color picker ;)
-    private static Color initialColor = new Color(0, 0, 0);
+    private static Color initialColor = new Color(0, 0, 255);
 
     public static void main(String[] args){
 
@@ -23,7 +23,6 @@ public class Main {
         try{
 
             while(window.update()){
-
                 //use for logs in stuff
             }
 

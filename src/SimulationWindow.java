@@ -6,8 +6,8 @@ public class SimulationWindow extends JFrame {
 
     //window properties
     private static final String TITLE = "Arduino Lights";
-    private static final int INITIALIZE_WINDOW_WIDTH = 820;
-    private static final int INITIALIZE_WINDOW_HEIGHT = 1000;
+    private static final int INITIALIZE_WINDOW_WIDTH = 670;
+    private static final int INITIALIZE_WINDOW_HEIGHT = 770;
 
     //window content
     private JLabel redLabel;
@@ -26,7 +26,7 @@ public class SimulationWindow extends JFrame {
 
         //window stuff
         setPreferredSize(new Dimension(INITIALIZE_WINDOW_WIDTH, INITIALIZE_WINDOW_HEIGHT));
-        setResizable(true);
+        setResizable(false);
         setLayout(new FlowLayout());
         setTitle(TITLE);
 
@@ -39,18 +39,28 @@ public class SimulationWindow extends JFrame {
         pack();
     }
 
-    public boolean update(){
+    public boolean update() throws Exception {
 
         if(!lighting.update())
             return false;
 
         Color values = lighting.values();
 
+        //bounds checking for safety
+        if(values.getRed() > 255 || values.getRed() < 0)
+            throw new Exception("RED: " + values.getRed());
+        if(values.getGreen() > 255 || values.getGreen() < 0)
+            throw new Exception("GREEN: " + values.getGreen());
+        if(values.getBlue() > 255 || values.getBlue() < 0)
+            throw new Exception("BLUE: " + values.getBlue());
+
         //setting label colors
         redLabel.setBackground(new Color(values.getRed(), 0, 0));
         greenLabel.setBackground(new Color(0, values.getGreen(), 0));
         blueLabel.setBackground(new Color(0, 0, values.getBlue()));
         colorLabel.setBackground(new Color(values.getRed(), values.getGreen(), values.getBlue()));
+
+        repaint();
 
         return true;
     }
@@ -62,13 +72,13 @@ public class SimulationWindow extends JFrame {
      * */
     private JPanel colorPallet(){
 
-        JPanel colorPanel = new JPanel(new BorderLayout());
-        colorPanel.setPreferredSize(new Dimension(600, 700));
+        JPanel colorPanel = new JPanel();
+        colorPanel.setPreferredSize(new Dimension(INITIALIZE_WINDOW_WIDTH, INITIALIZE_WINDOW_HEIGHT));
         colorPanel.setBackground(Color.DARK_GRAY);
 
         /*Individual Color Container*/
         Container rgbVals = new Container();
-        rgbVals.setPreferredSize(new Dimension(300, 100));
+        rgbVals.setPreferredSize(new Dimension(INITIALIZE_WINDOW_WIDTH, 180));
         rgbVals.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
@@ -76,29 +86,29 @@ public class SimulationWindow extends JFrame {
 
         c.gridx = 0;
         c.gridy = 0;
-        c.insets = new Insets(0, 5, 0, 0);
+        c.insets = new Insets(0, 0, 0, 5);
         rgbVals.add(redLabel = colorBox(), c);
 
         c.gridx = 1;
         c.gridy = 0;
-        c.insets = new Insets(0, 5, 0, 0);
+        c.insets = new Insets(0, 0, 0, 5);
         rgbVals.add(greenLabel = colorBox(), c);
 
         c.gridx = 2;
         c.gridy = 0;
-        c.insets = new Insets(0, 5, 0, 0);
+        c.insets = new Insets(0, 0, 0, 0);
         rgbVals.add(blueLabel = colorBox(), c);
 
 
         /*INCLUSIVE Color Label*/
         colorLabel = new JLabel();
         colorLabel.setOpaque(true);
-        colorLabel.setPreferredSize(new Dimension(300, 400));
+        colorLabel.setPreferredSize(new Dimension(INITIALIZE_WINDOW_WIDTH, 520));
         colorLabel.setBackground(Color.BLACK);
 
 
-        colorPanel.add(colorLabel, BorderLayout.NORTH);
-        colorPanel.add(rgbVals, BorderLayout.CENTER);
+        colorPanel.add(colorLabel);
+        colorPanel.add(rgbVals);
 
         return colorPanel;
     }
@@ -106,7 +116,7 @@ public class SimulationWindow extends JFrame {
     private JLabel colorBox(){
         JLabel label = new JLabel();
         label.setOpaque(true);
-        label.setPreferredSize(new Dimension(185, 180));
+        label.setPreferredSize(new Dimension(215, 180));
         label.setBackground(Color.BLACK);
         label.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
         return label;

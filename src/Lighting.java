@@ -13,6 +13,7 @@ public class Lighting {
         this.blue = initialColor.getBlue();
     }
 
+
     /*
     * The "loop" in Arduino
     * Don't care about drifting, so using Thread.sleep is fine.
